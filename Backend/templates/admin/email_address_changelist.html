@@ -1,0 +1,94 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block object-tools %}
+  <div class="object-tools" style="display: flex; justify-content: flex-end;">
+    <a href="{{ add_email_url }}" class="addlink" style="font-size: 15px; padding: 8px 24px; background: #2563eb; color: #fff; border-radius: 5px; display: inline-flex; align-items: center; min-width: 120px; text-align: center; white-space: nowrap;">
+      ➕ Add Email
+    </a>
+  </div>
+{% endblock %}
+
+{% block search %}
+  {{ block.super|safe }}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script>
+function showPasswordPopup(username, email) {
+    // Create a modal popup
+    var modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    `;
+    
+    var popup = document.createElement('div');
+    popup.style.cssText = `
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+    `;
+    
+    popup.innerHTML = `
+        <h3 style="margin-top: 0; color: #333;">Password Information</h3>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Username:</strong> ${username}</p>
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
+            <p style="margin: 0; color: #666;">
+                <strong>Note:</strong> Passwords are encrypted for security and cannot be retrieved.
+            </p>
+            <p style="margin: 10px 0 0 0; color: #666;">
+                To set a new password, use the "Reset Password" button.
+            </p>
+        </div>
+        <button onclick="closePasswordPopup()" style="
+            background-color: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        ">Close</button>
+    `;
+    
+    modal.appendChild(popup);
+    document.body.appendChild(modal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closePasswordPopup();
+        }
+    });
+}
+
+function closePasswordPopup() {
+    var modal = document.querySelector('div[style*="position: fixed"]');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closePasswordPopup();
+    }
+});
+</script>
+{% endblock %} 

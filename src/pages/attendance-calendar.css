@@ -1,0 +1,5 @@
+.attendance-submitted-day {
+  background: #2563eb !important; /* Tailwind blue-600 */
+  color: #fff !important; /* white font */
+  border-radius: 0.3rem !important;
+} 

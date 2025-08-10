@@ -1,0 +1,62 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+    <!-- Recent Changes Section -->
+    <div class="recent-changes-section" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007cba;">
+        <h2 style="margin: 0 0 15px 0; color: #007cba; font-size: 20px;">
+            📊 Recent Changes Overview
+        </h2>
+        
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+            <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <span style="font-size: 24px;">⏳</span>
+                    <h3 style="margin: 0; color: #ff6b35;">Pending Changes</h3>
+                </div>
+                <div style="font-size: 24px; font-weight: bold; color: #ff6b35;">{{ pending_count|default:0 }}</div>
+                <div style="font-size: 12px; color: #666;">Awaiting approval</div>
+            </div>
+            
+            <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <span style="font-size: 24px;">📅</span>
+                    <h3 style="margin: 0; color: #007cba;">Recent Activity</h3>
+                </div>
+                <div style="font-size: 24px; font-weight: bold; color: #007cba;">{{ recent_count|default:0 }}</div>
+                <div style="font-size: 12px; color: #666;">Last 7 days</div>
+            </div>
+            
+            <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <span style="font-size: 24px;">✅</span>
+                    <h3 style="margin: 0; color: #28a745;">Approved</h3>
+                </div>
+                <div style="font-size: 24px; font-weight: bold; color: #28a745;">{{ approved_count|default:0 }}</div>
+                <div style="font-size: 12px; color: #666;">This week</div>
+            </div>
+            
+            <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <span style="font-size: 24px;">❌</span>
+                    <h3 style="margin: 0; color: #dc3545;">Rejected</h3>
+                </div>
+                <div style="font-size: 24px; font-weight: bold; color: #dc3545;">{{ rejected_count|default:0 }}</div>
+                <div style="font-size: 12px; color: #666;">This week</div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 4px; border-left: 3px solid #2196f3;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 16px;">💡</span>
+                <span style="font-size: 14px; color: #1976d2;">
+                    <strong>Quick Actions:</strong> 
+                    <a href="{% url 'admin:api_changerequest_changelist' %}" style="color: #2196f3; text-decoration: none; font-weight: bold;">View Change Requests</a> | 
+                    <a href="{% url 'admin:api_changerequest_changelist' %}?status__exact=pending" style="color: #ff6b35; text-decoration: none; font-weight: bold;">Pending Only</a>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {{ block.super }}
+{% endblock %} 
