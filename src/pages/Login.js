@@ -15,15 +15,18 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
     try {
-  
       await login(email, password);
-      
       alert('Login successful!');
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.message || 'Network error. Please check if the backend server is running.');
+      if (err.message && err.message.includes('Failed to fetch')) {
+        setError('Connection to server failed. Please check if the backend server is running and accessible.');
+      } else {
+        setError(err.message || 'Network error. Please check if the backend server is running.');
+      }
     } finally {
       setLoading(false);
     }
@@ -89,4 +92,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;

@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Sidebar.css';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
-const Sidebar = () => {
+const Sidebar = ({ closeSidebar }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { role, hasPermission, logout, user, assignedClasses } = useAuth();
+  const { role, hasPermission, logout, user } = useAuth();
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -66,7 +67,16 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <h2>IPS Management</h2>
+        <div className="flex items-center justify-between">
+          <h2>IPS Management</h2>
+          <button 
+            className="md:hidden text-white p-2"
+            onClick={closeSidebar}
+            aria-label="Close menu"
+          >
+            <FaTimes />
+          </button>
+        </div>
         <div className="role-badge">
           {role === 'vice_principal' && 'Vice Principal'}
           {role === 'teacher' && 'Teacher'}
@@ -87,7 +97,7 @@ const Sidebar = () => {
             </div>
             {role === 'teacher' && (
               <div className="sidebar-user-label">
-                <span className="sidebar-user-label-title">Class Name:</span> <span className="sidebar-user-label-value">{assignedClasses && assignedClasses[0]?.name || user.class_name || '-'}</span>
+                <span className="sidebar-user-label-title">Class Name:</span> <span className="sidebar-user-label-value">{ user.class_name }</span>
               </div>
             )}
           </div>
@@ -120,4 +130,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

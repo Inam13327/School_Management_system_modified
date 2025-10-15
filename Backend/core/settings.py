@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-r!okeoo)dz&gy!hx%i9(=$f&p1x3b@&s61n!q31xuoh(5lmy8n
 DEBUG = True
 SITE_ID = 1
 
-ALLOWED_HOSTS = ['*']
+# Allow access from localhost and local network
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']  # '*' allows all hosts, you can replace with your specific IP
 
 # Application definition
 
@@ -53,10 +54,12 @@ INSTALLED_APPS = [
     'src.core',
     'src.course',
     'channels',
+    'whitenoise.runserver_nostatic',  # Add whitenoise for serving static files
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add whitenoise middleware
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -73,12 +76,14 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+# If you want to restrict to specific origins instead of all, uncomment and modify:
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+#     "http://192.168.x.x:3000",  # Replace with your local IP
+# ]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
@@ -231,9 +236,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'  # Ensure this ends with '/'
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# WhiteNoise configuration for serving static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Directory where React build files will be served from
+REACT_APP_DIR = os.path.join(BASE_DIR, '..', 'build')
+if os.path.exists(REACT_APP_DIR):
+    STATICFILES_DIRS += [REACT_APP_DIR]
+
+# Additional static files directories
+STATICFILES_DIRS += [
     BASE_DIR / "static",  # Add this line to specify the location of your static files
 ]
 

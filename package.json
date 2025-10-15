@@ -16,7 +16,7 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "react": "^19.1.0",
-    "react-datepicker": "^8.4.0",
+    "react-datepicker": "^8.7.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.3",
@@ -29,6 +29,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-lan": "set HOST=0.0.0.0&&set DANGEROUSLY_DISABLE_HOST_CHECK=true&&react-scripts start",
+    "start-network": "set HOST=0.0.0.0&&set DANGEROUSLY_DISABLE_HOST_CHECK=true&&react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

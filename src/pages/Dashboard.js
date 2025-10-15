@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { FaUserGraduate, FaCalendarCheck, FaMoneyBillWave, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-// import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -26,8 +25,6 @@ const Dashboard = () => {
       try {
         const response = await api.get('/students/');
         const data = response.data;
-        console.log('Dashboard - All students data:', data);
-        console.log('Dashboard - Sample student:', data[0]);
         setStudents(data);
       } catch (err) {
         setStudentsError('Failed to fetch students. ' + err.message);
@@ -39,18 +36,13 @@ const Dashboard = () => {
     fetchAllStudents();
   }, []);
 
-  // Listen for changes to localStorage classMonitors
   useEffect(() => {
     const handleStorageChange = () => {
       const saved = localStorage.getItem('classMonitors');
-      if (saved) {
-        setClassMonitors(JSON.parse(saved));
-      }
+      if (saved) setClassMonitors(JSON.parse(saved));
     };
 
     window.addEventListener('storage', handleStorageChange);
-    
-    // Also check for changes periodically (since storage event doesn't fire for same tab)
     const interval = setInterval(() => {
       const saved = localStorage.getItem('classMonitors');
       if (saved) {
@@ -70,33 +62,14 @@ const Dashboard = () => {
     };
   }, []);
 
-  // Dynamically calculate class strengths from students
   const classStrengths = Array.from({ length: 10 }, (_, i) => {
     const classId = i + 1;
     const classAdmitted = `Class ${classId}`;
     const boys = students.filter(s => s.class_admitted === classAdmitted && s.gender === 'boys').length;
     const girls = students.filter(s => s.class_admitted === classAdmitted && s.gender === 'girls').length;
-    
-    // Debug logging
-    console.log(`Class ${classId} calculation:`, {
-      classAdmitted,
-      totalStudents: students.length,
-      studentsInClass: students.filter(s => s.class_admitted === classAdmitted),
-      boys,
-      girls
-    });
-    
     return { class: `Class ${classId}`, boys, girls, total: boys + girls };
   });
 
-  // Filter students and classStrengths for the selected batch only
-  // const selectedBatchYear = parseInt(batch.replace('Batch-', ''));
-  // const filteredStudents = students.filter(s => s.batch === selectedBatchYear);
-  // const filteredClassStrengths = classStrengths.filter((c, idx) => {
-  //   // Find if any student in this class has the selected batch
-  //   const classId = idx + 1;
-  //   return students.some(s => (s.class_fk_id === classId || (s.class_fk && s.class_fk.id === classId)) && s.batch === selectedBatchYear);
-  // });
   const totalStudents = students.length;
 
   const handleSearch = async () => {
@@ -124,45 +97,116 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-      <div className="mb-6 flex flex-col md:flex-row gap-4 items-center">
-        <div className="flex gap-2 w-full md:w-2/3">
-          <div className="relative flex-1">
+    <div className="p-4 md:p-6">
+      <div className="mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Dashboard</h1>
+        <p className="text-gray-600">Welcome to the IPS Management System</p>
+      </div>
+
+      {/* Search Section */}
+      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+        <div className="flex flex-wrap items-center">
+          <div className="w-full md:w-auto flex-1 mb-3 md:mb-0 md:mr-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by student name"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
+                value={search.name}
+                onChange={(e) => setSearch({ ...search, name: e.target.value })}
+                aria-label="Search by student name"
+              />
+              <FaSearch className="absolute right-3 top-3.5 text-gray-400" />
+            </div>
+          </div>
+          <div className="w-full md:w-auto flex-1 mb-3 md:mb-0 md:mr-4">
             <select
-              className="w-full pl-3 pr-8 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 appearance-none text-gray-700"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-base"
               value={search.className}
-              onChange={e => setSearch(s => ({ ...s, className: e.target.value }))}
+              onChange={(e) => setSearch({ ...search, className: e.target.value })}
+              aria-label="Filter by class"
             >
-              <option value="">Select Class</option>
+              <option value="">All Classes</option>
               {Array.from({ length: 10 }, (_, i) => (
-                <option key={i + 1} value={`Class ${i + 1}`}>{`Class ${i + 1}`}</option>
+                <option key={i} value={`Class ${i + 1}`}>
+                  Class {i + 1}
+                </option>
               ))}
             </select>
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">▼</span>
           </div>
-          <div className="relative flex-1">
-            <input
-              type="text"
-              className="w-full pl-3 pr-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Search by Student Name"
-              value={search.name}
-              onChange={e => setSearch(s => ({ ...s, name: e.target.value }))}
-            />
-          </div>
+          <button
+            className="w-full md:w-auto bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors text-base font-medium min-height-44"
+            onClick={handleSearch}
+            aria-label="Search students"
+          >
+            Search
+          </button>
         </div>
-        <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 font-semibold" onClick={handleSearch} type="button">Search</button>
       </div>
+
+      {/* Info Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded shadow p-6 flex items-center gap-4">
-          <FaUserGraduate className="text-3xl text-blue-500" />
-          <div>
-            <div className="text-xl font-semibold">Total Students</div>
-            <div className="text-gray-700 text-base">{studentsLoading ? 'Loading...' : studentsError ? studentsError : totalStudents}</div>
+        {/* Students Card */}
+        <div 
+          className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => navigate('/students')}
+        >
+          <div className="flex items-center mb-4">
+            <div className="bg-blue-100 p-4 rounded-full mr-4">
+              <FaUserGraduate className="text-blue-500 text-2xl" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">Students</h3>
+              <p className="text-gray-500">Total enrolled</p>
+            </div>
+          </div>
+          <div className="text-3xl font-bold text-gray-800">{totalStudents}</div>
+          <div className="mt-4">
+            <span className="text-blue-500 font-medium">View all students →</span>
           </div>
         </div>
-        {/* Keep the other cards as placeholders or remove as needed */}
+
+        {/* Attendance Card */}
+        <div 
+          className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => navigate('/attendance')}
+        >
+          <div className="flex items-center mb-4">
+            <div className="bg-green-100 p-4 rounded-full mr-4">
+              <FaCalendarCheck className="text-green-500 text-2xl" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">Attendance</h3>
+              <p className="text-gray-500">Today's status</p>
+            </div>
+          </div>
+          <div className="text-3xl font-bold text-gray-800">--</div>
+          <div className="mt-4">
+            <span className="text-green-500 font-medium">View attendance →</span>
+          </div>
+        </div>
+
+        {/* Fees Card */}
+        <div 
+          className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => navigate('/fees')}
+        >
+          <div className="flex items-center mb-4">
+            <div className="bg-purple-100 p-4 rounded-full mr-4">
+              <FaMoneyBillWave className="text-purple-500 text-2xl" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">Fees</h3>
+              <p className="text-gray-500">Collection status</p>
+            </div>
+          </div>
+          <div className="text-3xl font-bold text-gray-800">--</div>
+          <div className="mt-4">
+            <span className="text-purple-500 font-medium">View fee details →</span>
+          </div>
+        </div>
       </div>
+
       {/* Class Strength Cards Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
         {classStrengths.map((c, idx) => (
@@ -196,59 +240,8 @@ const Dashboard = () => {
           </button>
         ))}
       </div>
-      {/* Student Search Results Dialog */}
-      {showDialog && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
-          <div className="bg-white p-6 rounded shadow w-full max-w-lg relative">
-            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setShowDialog(false)}>
-              ×
-            </button>
-            <h2 className="text-xl font-bold mb-4">Search Results</h2>
-            {searchLoading ? (
-              <div className="text-blue-600">Loading...</div>
-            ) : searchError ? (
-              <div className="text-red-600">{searchError}</div>
-            ) : searchResults.length > 0 ? (
-              <>
-                <table className="min-w-full border mb-2">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="px-4 py-2 border">Serial No</th>
-                      <th className="px-4 py-2 border">Student Name</th>
-                      <th className="px-4 py-2 border">Father's Name</th>
-                      <th className="px-4 py-2 border">Class Admitted</th>
-                      <th className="px-4 py-2 border">Gender</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {searchResults.map((student) => (
-                      <tr key={student.id}>
-                        <td className="px-4 py-2 border">{student.serial_no || '-'}</td>
-                        <td className="px-4 py-2 border">{student.name}</td>
-                        <td className="px-4 py-2 border">{student.father_name || '-'}</td>
-                        <td className="px-4 py-2 border">{student.class_admitted || '-'}</td>
-                        <td className="px-4 py-2 border">{student.gender === 'boys' ? 'Boys' : 'Girls'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="flex justify-center mt-4">
-                  <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 font-semibold" onClick={() => setShowDialog(false)} type="button">OK</button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="text-gray-500">No students found for this search.</div>
-                <div className="flex justify-center mt-4">
-                  <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 font-semibold" onClick={() => setShowDialog(false)} type="button">OK</button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default Dashboard; 
+export default Dashboard;

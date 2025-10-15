@@ -108,26 +108,26 @@ const ReportCardPage = () => {
     const fetchData = async () => {
       setLoading(true);
       // Fetch student details
-      const studentRes = await fetch(`http://localhost:8000/api/students/${studentId}/`);
+      const studentRes = await fetch(`http://192.168.100.2:8000/api/students/${studentId}/`);
       if (studentRes.ok) {
         setStudent(await studentRes.json());
       }
       // Fetch subjects for class
-      const subRes = await fetch(`http://localhost:8000/api/subjects/?class_fk=${classId}`);
+      const subRes = await fetch(`http://192.168.100.2:8000/api/subjects/?class_fk=${classId}`);
       let subjectList = [];
       if (subRes.ok) {
         subjectList = await subRes.json();
       }
       setSubjects(subjectList);
       // Fetch marks for student in this class
-      const marksRes = await fetch(`http://localhost:8000/api/marks/?class_fk=${classId}&student=${studentId}`);
+      const marksRes = await fetch(`http://192.168.100.2:8000/api/marks/?class_fk=${classId}&student=${studentId}`);
       let marksList = [];
       if (marksRes.ok) {
         marksList = await marksRes.json();
       }
       setMarks(marksList);
       // Fetch attendance for student in this class
-      const attRes = await fetch(`http://localhost:8000/api/attendances/?student=${studentId}&student__class_fk=${classId}`);
+      const attRes = await fetch(`http://192.168.100.2:8000/api/attendances/?student=${studentId}&student__class_fk=${classId}`);
       let attList = [];
       if (attRes.ok) {
         attList = await attRes.json();

@@ -26,7 +26,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:8000/api/auth/login/', {
+      // Use dynamic server IP or fallback to current hostname
+      const serverIP = process.env.REACT_APP_SERVER_IP || window.location.hostname;
+      const response = await fetch(`http://${serverIP}:8000/api/auth/login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -145,4 +147,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext); 
+export const useAuth = () => useContext(AuthContext);

@@ -11,49 +11,7 @@ const genders = [
   { label: 'Girls', value: 'girls' },
 ];
 
-// Dummy students and fee data for demonstration; replace with API data as needed
-const dummyStudents = [
-  {
-    id: 1,
-    name: 'Ali',
-    classIdx: 0,
-    gender: 'boys',
-    totalFee: 2000,
-    absentees: 2,
-    fine: 100,
-    submittedFee: 1800,
-  },
-  {
-    id: 2,
-    name: 'Sara',
-    classIdx: 0,
-    gender: 'girls',
-    totalFee: 2000,
-    absentees: 0,
-    fine: 0,
-    submittedFee: 2000,
-  },
-  {
-    id: 3,
-    name: 'Bilal',
-    classIdx: 1,
-    gender: 'boys',
-    totalFee: 2100,
-    absentees: 1,
-    fine: 50,
-    submittedFee: 2000,
-  },
-  {
-    id: 4,
-    name: 'Ayesha',
-    classIdx: 1,
-    gender: 'girls',
-    totalFee: 2100,
-    absentees: 3,
-    fine: 150,
-    submittedFee: 1900,
-  },
-];
+
 
 const Fees = () => {
   const { classNames } = useContext(ClassSubjectContext);
@@ -94,7 +52,7 @@ const Fees = () => {
     try {
       const classId = selected.classIdx + 1;
       
-      const response = await fetch(`http://localhost:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
+      const response = await fetch(`http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
       if (!response.ok) throw new Error('Failed to fetch students');
       const data = await response.json();
       console.log('Students fetched:', data.length);
@@ -103,7 +61,7 @@ const Fees = () => {
       // Fetch absentees count for each student for the selected month
       const absenteesCount = await getAbsenteesByClassAndMonth(classId, year, month);
       // Fetch fees for the selected month
-      const feeRes = await fetch(`http://localhost:8000/api/fees/?month=${selectedMonth}&student__class_admitted=Class ${classId}&student__gender=${selected.gender}`);
+      const feeRes = await fetch(`http://192.168.100.2:8000/api/fees/?month=${selectedMonth}&student__class_admitted=Class ${classId}&student__gender=${selected.gender}`);
       const feeData = feeRes.ok ? await feeRes.json() : [];
       console.log('Fees fetched:', feeData.length);
       // Map students with their fee data and absentees
@@ -635,6 +593,7 @@ const Fees = () => {
                 <th className="px-4 py-2 border">Absentees</th>
                 <th className="px-4 py-2 border">Total Fee</th>
                 <th className="px-4 py-2 border">Remaining Fee</th>
+                <th className="px-4 py-2 border">Generate Fee Card</th>
               </tr>
             </thead>
             <tbody>
@@ -654,6 +613,14 @@ const Fees = () => {
                     <td className="px-4 py-2 border">{absentees}</td>
                     <td className="px-4 py-2 border">{totalFee}</td>
                     <td className="px-4 py-2 border">{remainingFee}</td>
+                    <td className="px-4 py-2 border">
+                      <button
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        onClick={() => setFeeCardModal({ open: true, student: student })}
+                      >
+                        Generate
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -669,7 +636,7 @@ const Fees = () => {
             <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setFeeCardModal({ open: false, student: null })}>&times;</button>
             <div className="border-2 border-blue-700 p-6 rounded">
               <div className="flex justify-between items-center mb-2">
-                <div className="font-bold text-lg text-blue-800">HORIZON SCHOOL OF EDUCATION DHAMTOUR</div>
+                <div className="font-bold text-lg text-blue-800">School ABC </div>
                 <div className="text-xs">Fee Receipt</div>
               </div>
               <div className="flex justify-between mb-2">

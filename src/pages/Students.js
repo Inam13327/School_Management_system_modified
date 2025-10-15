@@ -93,7 +93,7 @@ const Students = () => {
         
         // First test if the server is accessible
         try {
-          const testResponse = await fetch('http://localhost:8000/api/students/', {
+          const testResponse = await fetch('http://192.168.100.2:8000/api/students/', {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
@@ -103,10 +103,10 @@ const Students = () => {
 
         } catch (testErr) {
           console.error('Server connection test failed:', testErr);
-          throw new Error('Cannot connect to server. Please make sure the Django server is running on http://localhost:8000');
+          throw new Error('Cannot connect to server. Please make sure the Django server is running on http://192.168.100.2:8000');
         }
         
-        const response = await fetch(`http://localhost:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`, {
+        const response = await fetch(`http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -130,9 +130,9 @@ const Students = () => {
               if (s.pic.startsWith('http')) {
                 picUrl = s.pic;
               } else if (s.pic.startsWith('/')) {
-                picUrl = `http://localhost:8000${s.pic}`;
+                picUrl = `http://192.168.100.2:8000${s.pic}`;
               } else {
-                picUrl = `http://localhost:8000/media/student_pics/${s.pic}`;
+                picUrl = `http://192.168.100.2:8000/media/student_pics/${s.pic}`;
               }
             }
             // Debug log
@@ -191,7 +191,7 @@ const Students = () => {
       formData.append('pic', form.pic);
     }
     try {
-      const response = await fetch('http://localhost:8000/api/students/', {
+      const response = await fetch('http://192.168.100.2:8000/api/students/', {
         method: 'POST',
         body: formData,
       });
@@ -202,7 +202,7 @@ const Students = () => {
       // Refetch students after successful add, using current filter
       if (selected.classIdx !== null && selected.gender) {
         const classId = selected.classIdx + 1;
-        const res = await fetch(`http://localhost:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
+        const res = await fetch(`http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
         const data = await res.json();
         setStudents(
           data.map(s => {
@@ -211,9 +211,9 @@ const Students = () => {
               if (s.pic.startsWith('http')) {
                 picUrl = s.pic;
               } else if (s.pic.startsWith('/')) {
-                picUrl = `http://localhost:8000${s.pic}`;
+                picUrl = `http://192.168.100.2:8000${s.pic}`;
               } else {
-                picUrl = `http://localhost:8000/media/student_pics/${s.pic}`;
+                picUrl = `http://192.168.100.2:8000/media/student_pics/${s.pic}`;
               }
             }
             // Debug log
@@ -296,7 +296,7 @@ const Students = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:8000/api/students/${studentId}/`, {
+      const response = await fetch(`http://192.168.100.2:8000/api/students/${studentId}/`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Failed to delete student');
@@ -357,7 +357,7 @@ const Students = () => {
       formData.append('pic', editForm.pic);
     }
     try {
-      const response = await fetch(`http://localhost:8000/api/students/${editId}/`, {
+      const response = await fetch(`http://192.168.100.2:8000/api/students/${editId}/`, {
         method: 'PUT',
         body: formData,
       });
@@ -368,7 +368,7 @@ const Students = () => {
       // Refetch students after successful update
       if (selected.classIdx !== null && selected.gender) {
         const classId = selected.classIdx + 1;
-        const res = await fetch(`http://localhost:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
+        const res = await fetch(`http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
         const data = await res.json();
         setStudents(
           data.map(s => {
@@ -377,9 +377,9 @@ const Students = () => {
               if (s.pic.startsWith('http')) {
                 picUrl = s.pic;
               } else if (s.pic.startsWith('/')) {
-                picUrl = `http://localhost:8000${s.pic}`;
+                picUrl = `http://192.168.100.2:8000${s.pic}`;
               } else {
-                picUrl = `http://localhost:8000/media/student_pics/${s.pic}`;
+                picUrl = `http://192.168.100.2:8000/media/student_pics/${s.pic}`;
               }
             }
             return {

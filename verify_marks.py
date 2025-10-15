@@ -10,7 +10,7 @@ def verify_marks_consistency():
     """Verify that marks shown in frontend match those in backend"""
     
     # Backend API endpoint
-    backend_url = "http://localhost:8000/api/test-marks/"
+    backend_url = "http://192.168.100.2:8000/api/test-marks/"
     
     print("🔍 VERIFYING MARKS CONSISTENCY")
     print("=" * 50)
@@ -58,7 +58,7 @@ def verify_marks_consistency():
             print(response.text)
             
     except requests.exceptions.ConnectionError:
-        print("❌ Cannot connect to backend server. Make sure it's running on http://localhost:8000")
+        print("❌ Cannot connect to backend server. Make sure it's running on http://192.168.100.2:8000")
     except Exception as e:
         print(f"❌ Error: {str(e)}")
 
@@ -69,7 +69,7 @@ def check_admin_data():
     
     try:
         # Get monthly tests to see admin calculated obtained marks
-        response = requests.get("http://localhost:8000/api/monthly-tests/")
+        response = requests.get("http://192.168.100.2:8000/api/monthly-tests/")
         if response.status_code == 200:
             tests = response.json()
             print(f"✅ Found {len(tests)} monthly tests")

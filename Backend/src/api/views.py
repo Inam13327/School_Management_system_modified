@@ -10,6 +10,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.utils import timezone
+from rest_framework import viewsets, permissions
+
 
 # ============================================================================
 # CLASS-BASED PERMISSION MIXIN
@@ -68,10 +70,15 @@ class ClassViewSet(viewsets.ModelViewSet):
     serializer_class = ClassSerializer
     permission_classes = [permissions.AllowAny]
 
-class StudentViewSet(viewsets.ModelViewSet, ClassBasedPermissionMixin):
+# yeh line hata do:
+# from .mixins import ClassBasedPermissionMixin
+
+# aur class signature ko is tarah kar do:
+class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.filter(is_archived=False)
     serializer_class = StudentSerializer
     permission_classes = [permissions.AllowAny]
+
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -80,12 +87,12 @@ class StudentViewSet(viewsets.ModelViewSet, ClassBasedPermissionMixin):
         batch_no = self.request.query_params.get('batch_no')
         
         if class_admitted:
-            queryset = queryset.filter(class_admitted=class_admitted)
+            queryset = queryset.filter(class_admitted__iexact=class_admitted)  # case-insensitive match
         if gender:
-            queryset = queryset.filter(gender=gender)
+            queryset = queryset.filter(gender__iexact=gender)  # case-insensitive gender
         if batch_no:
-            queryset = queryset.filter(batch_no=batch_no)
-            
+            queryset = queryset.filter(batch_no=batch_no)  # optional exact
+        
         return queryset
         
     def destroy(self, request, *args, **kwargs):

@@ -91,7 +91,7 @@ const Marks = () => {
     
     try {
       const classId = selected.classIdx + 1;
-      const response = await fetch('http://localhost:8000/api/subjects/', {
+      const response = await fetch('http://192.168.100.2:8000/api/subjects/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -114,7 +114,7 @@ const Marks = () => {
       }
       
       // Refresh subjects list
-      const subjectsResponse = await fetch(`http://localhost:8000/api/subjects/?class_fk=${classId}`);
+      const subjectsResponse = await fetch(`http://192.168.100.2:8000/api/subjects/?class_fk=${classId}`);
       if (subjectsResponse.ok) {
         const data = await subjectsResponse.json();
         setSubjectsByClass(prev => ({ ...prev, [selected.classIdx]: data.map(s => s.name) }));
@@ -188,7 +188,7 @@ const Marks = () => {
       const classId = selected.classIdx + 1;
       
       // First, get the subject ID
-      const subjectsResponse = await fetch(`http://localhost:8000/api/subjects/?class_fk=${classId}`);
+      const subjectsResponse = await fetch(`http://192.168.100.2:8000/api/subjects/?class_fk=${classId}`);
       if (!subjectsResponse.ok) throw new Error('Failed to fetch subjects');
       const subjectsData = await subjectsResponse.json();
       
@@ -199,7 +199,7 @@ const Marks = () => {
       }
       
       // Delete the subject
-      const deleteResponse = await fetch(`http://localhost:8000/api/subjects/${subjectToDeleteObj.id}/`, {
+      const deleteResponse = await fetch(`http://192.168.100.2:8000/api/subjects/${subjectToDeleteObj.id}/`, {
         method: 'DELETE',
       });
       
@@ -217,7 +217,7 @@ const Marks = () => {
       }
       
       // Refresh subjects list
-      const refreshResponse = await fetch(`http://localhost:8000/api/subjects/?class_fk=${classId}`);
+      const refreshResponse = await fetch(`http://192.168.100.2:8000/api/subjects/?class_fk=${classId}`);
       if (refreshResponse.ok) {
         const data = await refreshResponse.json();
         setSubjectsByClass(prev => ({ ...prev, [selected.classIdx]: data.map(s => s.name) }));
@@ -269,11 +269,11 @@ const Marks = () => {
       setLoading(true);
       setError('');
       const classId = selected.classIdx + 1;
-      const subjectsResponse = await fetch(`http://localhost:8000/api/subjects/?class_fk=${classId}`);
+      const subjectsResponse = await fetch(`http://192.168.100.2:8000/api/subjects/?class_fk=${classId}`);
       if (!subjectsResponse.ok) throw new Error('Failed to fetch subjects');
       const subjectsData = await subjectsResponse.json();
       // Fetch all marks for this class to build a lookup for ids
-      const marksRes = await fetch(`http://localhost:8000/api/marks/?class_fk=${classId}`);
+      const marksRes = await fetch(`http://192.168.100.2:8000/api/marks/?class_fk=${classId}`);
       const marksList = marksRes.ok ? await marksRes.json() : [];
       // Build a lookup: {studentId-subjectId: markId}
       const markIdLookup = {};
@@ -301,7 +301,7 @@ const Marks = () => {
       });
       if (marksToSave.length > 0) {
         // Always use POST (backend will handle first-time vs updates)
-        const response = await fetch('http://localhost:8000/api/marks/', {
+        const response = await fetch('http://192.168.100.2:8000/api/marks/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(marksToSave),
@@ -339,8 +339,8 @@ const Marks = () => {
       }
       // Refresh marks data and subjects after saving
       const [marksResponse, subjectsResponse2] = await Promise.all([
-        fetch(`http://localhost:8000/api/marks/?class_fk=${classId}`),
-        fetch(`http://localhost:8000/api/subjects/?class_fk=${classId}`)
+        fetch(`http://192.168.100.2:8000/api/marks/?class_fk=${classId}`),
+        fetch(`http://192.168.100.2:8000/api/subjects/?class_fk=${classId}`)
       ]);
       if (marksResponse.ok) {
         const data = await marksResponse.json();
@@ -398,7 +398,7 @@ const Marks = () => {
   const checkPendingRequests = async () => {
     try {
 
-      const response = await fetch('http://localhost:8000/api/change-requests/pending/');
+      const response = await fetch('http://192.168.100.2:8000/api/change-requests/pending/');
       if (response.ok) {
         const data = await response.json();
 
@@ -417,7 +417,7 @@ const Marks = () => {
   const checkApprovedChanges = async () => {
     try {
 
-      const response = await fetch('http://localhost:8000/api/change-requests/approved/');
+      const response = await fetch('http://192.168.100.2:8000/api/change-requests/approved/');
       if (response.ok) {
         const data = await response.json();
 
@@ -436,7 +436,7 @@ const Marks = () => {
           // Refresh marks data to show updated values
           if (selected.classIdx !== null) {
             const classId = selected.classIdx + 1;
-            const marksResponse = await fetch(`http://localhost:8000/api/marks/?class_fk=${classId}`);
+            const marksResponse = await fetch(`http://192.168.100.2:8000/api/marks/?class_fk=${classId}`);
             if (marksResponse.ok) {
               const data = await marksResponse.json();
               const organizedMarks = {};
@@ -480,7 +480,7 @@ const Marks = () => {
       }
       try {
         const classId = selected.classIdx + 1;
-        const response = await fetch(`http://localhost:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
+        const response = await fetch(`http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
         if (!response.ok) throw new Error('Failed to fetch students');
         const data = await response.json();
         setStudents(data);
@@ -501,7 +501,7 @@ const Marks = () => {
       try {
         setLoading(true);
         const classId = selected.classIdx + 1;
-        const response = await fetch(`http://localhost:8000/api/subjects/?class_fk=${classId}`);
+        const response = await fetch(`http://192.168.100.2:8000/api/subjects/?class_fk=${classId}`);
         if (!response.ok) throw new Error('Failed to fetch subjects');
         const data = await response.json();
         setSubjectsByClass(prev => ({ ...prev, [selected.classIdx]: data.map(s => s.name) }));
@@ -525,7 +525,7 @@ const Marks = () => {
       try {
         setLoading(true);
         const classId = selected.classIdx + 1;
-        const response = await fetch(`http://localhost:8000/api/marks/?class_fk=${classId}`);
+        const response = await fetch(`http://192.168.100.2:8000/api/marks/?class_fk=${classId}`);
         if (!response.ok) throw new Error('Failed to fetch marks');
         const data = await response.json();
         // Organize marks by student and subject, including pending changes

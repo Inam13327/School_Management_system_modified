@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --touch-target-size: 44px; /* Minimum touch target size for accessibility */
+}
+
+html {
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -9,6 +22,63 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%; /* Prevents iOS text size adjust after orientation change */
+}
+
+/* Mobile-friendly styles */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px; /* Slightly smaller base font size on mobile */
+  }
+  
+  /* Improve touch targets for mobile */
+  button, 
+  [role="button"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="button"] {
+    min-height: var(--touch-target-size);
+    min-width: var(--touch-target-size);
+  }
+  
+  /* Improve form elements on mobile */
+  input, select, textarea {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}
+
+/* Improve focus states for accessibility */
+:focus {
+  outline: 3px solid rgba(102, 126, 234, 0.5);
+  outline-offset: 2px;
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 480px) {
+  /* Increase spacing between interactive elements */
+  .card, .button, .form-control {
+    margin-bottom: 16px;
+  }
+  
+  /* Ensure sufficient contrast for text */
+  .text-sm {
+    font-size: 14px;
+  }
+  
+  /* Prevent content from being cut off */
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Improve contrast for text */
+.text-contrast-improved {
+  text-shadow: 0 0 1px rgba(0,0,0,0.1);
 }
 
 code {

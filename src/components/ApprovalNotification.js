@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const ApprovalNotification = ({ pageType, selectedClass, selectedGender }) => {
   const [pendingCount, setPendingCount] = useState(0);
-  const [notificationMessage, setNotificationMessage] = useState('');
+ 
   const [isVisible, setIsVisible] = useState(false);
 
   // Map pageType to the actual model_type used in the backend
@@ -21,7 +21,7 @@ const ApprovalNotification = ({ pageType, selectedClass, selectedGender }) => {
     const checkApprovalStatus = async () => {
       try {
         // Get pending count for this specific page type
-        const pendingResponse = await fetch('http://localhost:8000/api/change-requests/pending/');
+        const pendingResponse = await fetch('http://192.168.100.2:8000/api/change-requests/pending/');
         if (pendingResponse.ok) {
           const pendingData = await pendingResponse.json();
           const modelType = getModelType(pageType);

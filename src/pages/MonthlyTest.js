@@ -57,7 +57,7 @@ const MonthlyTest = () => {
     }
     try {
       const classId = selected.classIdx + 1;
-      const url = `http://localhost:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`;
+      const url = `http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`;
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch students');
       const data = await response.json();
@@ -71,7 +71,7 @@ const MonthlyTest = () => {
     if (selected.classIdx === null) return;
     try {
       const classId = selected.classIdx + 1;
-      const response = await fetch(`http://localhost:8000/api/subjects/?class_fk=${classId}`);
+      const response = await fetch(`http://192.168.100.2:8000/api/subjects/?class_fk=${classId}`);
       if (!response.ok) throw new Error('Failed to fetch subjects');
       const data = await response.json();
       setSubjects(data.map(s => s.name));
@@ -85,7 +85,7 @@ const MonthlyTest = () => {
     if (selected.classIdx === null) return;
     try {
       const classId = selected.classIdx + 1;
-      const response = await fetch(`http://localhost:8000/api/monthly-tests/?class_fk=${classId}&month=${selectedMonth}`);
+      const response = await fetch(`http://192.168.100.2:8000/api/monthly-tests/?class_fk=${classId}&month=${selectedMonth}`);
       if (!response.ok) throw new Error('Failed to fetch tests');
       const data = await response.json();
       setTests(Array.isArray(data) ? data : []);
@@ -135,7 +135,7 @@ const MonthlyTest = () => {
         month: selectedMonth
       };
 
-      const response = await fetch('http://localhost:8000/api/monthly-tests/', {
+      const response = await fetch('http://192.168.100.2:8000/api/monthly-tests/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ const MonthlyTest = () => {
             total_marks: testData.totalMarks
           };
 
-          await fetch('http://localhost:8000/api/test-marks/', {
+          await fetch('http://192.168.100.2:8000/api/test-marks/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -209,9 +209,9 @@ const MonthlyTest = () => {
       }];
       
       console.log('[DEBUG] Sending test marks change request:', requestBody);
-      console.log('[DEBUG] Request URL: http://localhost:8000/api/test-marks/');
+      console.log('[DEBUG] Request URL: http://192.168.100.2:8000/api/test-marks/');
       
-      const response = await fetch(`http://localhost:8000/api/test-marks/`, {
+      const response = await fetch(`http://192.168.100.2:8000/api/test-marks/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -260,7 +260,7 @@ const MonthlyTest = () => {
   const handleViewTestResults = async (test) => {
     setSelectedTest(test);
     try {
-      const response = await fetch(`http://localhost:8000/api/test-marks/?test=${test.id}`);
+      const response = await fetch(`http://192.168.100.2:8000/api/test-marks/?test=${test.id}`);
       if (!response.ok) throw new Error('Failed to fetch test results');
       const data = await response.json();
       
@@ -298,7 +298,7 @@ const MonthlyTest = () => {
       month: test.month
     });
     try {
-      const response = await fetch(`http://localhost:8000/api/test-marks/?test=${test.id}`);
+      const response = await fetch(`http://192.168.100.2:8000/api/test-marks/?test=${test.id}`);
       if (response.ok) {
         const marksData = await response.json();
         const marksMap = {};
@@ -319,7 +319,7 @@ const MonthlyTest = () => {
   const handleDeleteTest = async (test) => {
     if (window.confirm(`Are you sure you want to delete the test "${test.title}"? This action cannot be undone.`)) {
       try {
-        const response = await fetch(`http://localhost:8000/api/monthly-tests/${test.id}/`, {
+        const response = await fetch(`http://192.168.100.2:8000/api/monthly-tests/${test.id}/`, {
           method: 'DELETE',
         });
         
@@ -344,7 +344,7 @@ const MonthlyTest = () => {
     setLoading(true);
     try {
       // 1. Fetch the current (old) test details
-      const oldResponse = await fetch(`http://localhost:8000/api/monthly-tests/${modifyTestData.id}/`);
+      const oldResponse = await fetch(`http://192.168.100.2:8000/api/monthly-tests/${modifyTestData.id}/`);
       if (!oldResponse.ok) throw new Error('Failed to fetch current test details');
       const oldTest = await oldResponse.json();
       
@@ -397,7 +397,7 @@ const MonthlyTest = () => {
       }
       
       // 6. If test details changed, create change request for test details
-      const crResponse = await fetch('http://localhost:8000/api/change-requests/', {
+      const crResponse = await fetch('http://192.168.100.2:8000/api/change-requests/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -438,7 +438,7 @@ const MonthlyTest = () => {
   const checkForApprovedChanges = useCallback(async () => {
     try {
       console.log('Checking for approved changes...');
-      const response = await fetch('http://localhost:8000/api/change-requests/approved/');
+      const response = await fetch('http://192.168.100.2:8000/api/change-requests/approved/');
       if (response.ok) {
         const data = await response.json();
         const approvedRequests = data.approved_requests || [];
@@ -468,7 +468,7 @@ const MonthlyTest = () => {
             try {
               // Add a cache-busting parameter to ensure fresh data
               const timestamp = new Date().getTime();
-              const response = await fetch(`http://localhost:8000/api/test-marks/?test=${selectedTest.id}&_t=${timestamp}`);
+              const response = await fetch(`http://192.168.100.2:8000/api/test-marks/?test=${selectedTest.id}&_t=${timestamp}`);
               
               if (response.ok) {
                 const data = await response.json();
@@ -521,7 +521,7 @@ const MonthlyTest = () => {
           if (selectedTest) {
             try {
               const timestamp = new Date().getTime();
-              const response = await fetch(`http://localhost:8000/api/test-marks/?test=${selectedTest.id}&_t=${timestamp}`);
+              const response = await fetch(`http://192.168.100.2:8000/api/test-marks/?test=${selectedTest.id}&_t=${timestamp}`);
               if (response.ok) {
                 const data = await response.json();
                 setTestResults(data);
@@ -576,7 +576,7 @@ const MonthlyTest = () => {
       const refreshTestResults = async () => {
         try {
           const timestamp = new Date().getTime();
-          const response = await fetch(`http://localhost:8000/api/test-marks/?test=${selectedTest.id}&_t=${timestamp}`);
+          const response = await fetch(`http://192.168.100.2:8000/api/test-marks/?test=${selectedTest.id}&_t=${timestamp}`);
           if (response.ok) {
             const data = await response.json();
 
@@ -613,7 +613,7 @@ const MonthlyTest = () => {
   // Check for pending changes
   const checkPendingChanges = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/change-requests/pending/');
+      const response = await fetch('http://192.168.100.2:8000/api/change-requests/pending/');
       if (response.ok) {
         const data = await response.json();
         // Filter for test_marks and monthly_test changes
@@ -642,7 +642,7 @@ const MonthlyTest = () => {
       // If we have a selected test, refresh its results
       if (selectedTest) {
         try {
-          const response = await fetch(`http://localhost:8000/api/test-marks/?test=${selectedTest.id}`);
+          const response = await fetch(`http://192.168.100.2:8000/api/test-marks/?test=${selectedTest.id}`);
           if (response.ok) {
             const data = await response.json();
 
@@ -875,7 +875,7 @@ const MonthlyTest = () => {
                   onClick={async () => {
                     try {
                       const timestamp = new Date().getTime();
-                      const response = await fetch(`http://localhost:8000/api/test-marks/?test=${selectedTest.id}&_t=${timestamp}`);
+                      const response = await fetch(`http://192.168.100.2:8000/api/test-marks/?test=${selectedTest.id}&_t=${timestamp}`);
                       if (response.ok) {
                         const data = await response.json();
             
