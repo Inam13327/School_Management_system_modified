@@ -40,7 +40,7 @@ A modern, mobile-responsive IPS Management system built with React, Tailwind CSS
    ```
 2. Configure your API base URL in `.env`:
    ```env
-   REACT_APP_API_BASE_URL=http://192.168.100.2:8000/api
+   REACT_APP_API_BASE_URL=http://192.168.18.139:8000/api
    ```
 3. Start the development server:
    ```bash

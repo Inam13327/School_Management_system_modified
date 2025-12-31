@@ -94,14 +94,14 @@ const Attendance = () => {
     }
     try {
       const classId = selected.classIdx + 1;
-      const response = await fetch(`http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
+      const response = await fetch(`http://192.168.18.139:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
       if (!response.ok) throw new Error('Failed to fetch students');
       const data = await response.json();
       setStudents(data);
       if (data.length > 0) {
         const ids = data.map(s => s.id);
         try {
-          const attRes = await fetch(`http://192.168.100.2:8000/api/attendances/?date=${selectedDate}&${ids.map(id => `student=${id}`).join('&')}`);
+          const attRes = await fetch(`http://192.168.18.139:8000/api/attendances/?date=${selectedDate}&${ids.map(id => `student=${id}`).join('&')}`);
           const attData = attRes.ok ? await attRes.json() : [];
           setAttendanceRecords(attData);
           const classKey = getClassKey(selected.classIdx, selected.gender);
@@ -141,7 +141,7 @@ const Attendance = () => {
       const now = selectedDate ? new Date(selectedDate) : new Date();
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, '0');
-      const studentsResponse = await fetch(`http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
+      const studentsResponse = await fetch(`http://192.168.18.139:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
       if (!studentsResponse.ok) throw new Error('Failed to fetch students');
       const studentsData = await studentsResponse.json();
       if (studentsData.length === 0) {
@@ -150,7 +150,7 @@ const Attendance = () => {
         return;
       }
       const studentIds = studentsData.map(s => s.id);
-      const attendanceResponse = await fetch(`http://192.168.100.2:8000/api/attendances/?date__year=${year}&date__month=${month}&${studentIds.map(id => `student=${id}`).join('&')}`);
+      const attendanceResponse = await fetch(`http://192.168.18.139:8000/api/attendances/?date__year=${year}&date__month=${month}&${studentIds.map(id => `student=${id}`).join('&')}`);
       if (!attendanceResponse.ok) throw new Error('Failed to fetch attendance records');
       const attendanceData = await attendanceResponse.json();
       const dateSet = new Set(attendanceData.map(r => r.date));
@@ -171,7 +171,7 @@ const Attendance = () => {
     }
     try {
       const classId = selected.classIdx + 1;
-      const response = await fetch(`http://192.168.100.2:8000/api/attendances/?student__class_admitted=Class ${classId}&student__gender=${selected.gender}`);
+      const response = await fetch(`http://192.168.18.139:8000/api/attendances/?student__class_admitted=Class ${classId}&student__gender=${selected.gender}`);
       if (!response.ok) throw new Error('Failed to fetch attendance records');
       const data = await response.json();
       setExistingRecords(data);
@@ -237,7 +237,7 @@ const Attendance = () => {
       
       console.log('📊 Records to save:', records);
       
-      const response = await fetch('http://192.168.100.2:8000/api/attendances/', {
+      const response = await fetch('http://192.168.18.139:8000/api/attendances/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(records),
@@ -293,7 +293,7 @@ const Attendance = () => {
   const handleSaveEdit = async () => {
     if (!editingRecord || !editDate) return;
     try {
-      const response = await fetch(`http://192.168.100.2:8000/api/attendances/${editingRecord.id}/`, {
+      const response = await fetch(`http://192.168.18.139:8000/api/attendances/${editingRecord.id}/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -335,7 +335,7 @@ const Attendance = () => {
   const confirmDelete = async () => {
     if (!deleteRecordId) return;
     try {
-      const response = await fetch(`http://192.168.100.2:8000/api/attendances/${deleteRecordId}/`, {
+      const response = await fetch(`http://192.168.18.139:8000/api/attendances/${deleteRecordId}/`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Failed to delete attendance record');
@@ -387,7 +387,7 @@ const Attendance = () => {
   // Check for pending changes
   const checkPendingChanges = async () => {
     try {
-      const response = await fetch('http://192.168.100.2:8000/api/change-requests/pending/');
+      const response = await fetch('http://192.168.18.139:8000/api/change-requests/pending/');
       if (response.ok) {
         const data = await response.json();
         // The ApprovalNotification component will handle displaying the notification

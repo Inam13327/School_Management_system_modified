@@ -21,7 +21,7 @@ const ApprovalNotification = ({ pageType, selectedClass, selectedGender }) => {
     const checkApprovalStatus = async () => {
       try {
         // Get pending count for this specific page type
-        const pendingResponse = await fetch('http://192.168.100.2:8000/api/change-requests/pending/');
+        const pendingResponse = await fetch('http://192.168.18.139:8000/api/change-requests/pending/');
         if (pendingResponse.ok) {
           const pendingData = await pendingResponse.json();
           const modelType = getModelType(pageType);

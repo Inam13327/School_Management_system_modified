@@ -10,14 +10,14 @@ const ApprovalStatusBox = ({ pageType, selectedClass, selectedGender }) => {
     const checkApprovalStatus = async () => {
       try {
         // Get pending count
-        const pendingResponse = await fetch('http://192.168.100.2:8000/api/change-requests/pending-count/');
+        const pendingResponse = await fetch('http://192.168.18.139:8000/api/change-requests/pending-count/');
         if (pendingResponse.ok) {
           const pendingData = await pendingResponse.json();
           setPendingCount(pendingData.pending_count || 0);
         }
 
         // Get recent approved changes
-        const approvedResponse = await fetch('http://192.168.100.2:8000/api/change-requests/approved/');
+        const approvedResponse = await fetch('http://192.168.18.139:8000/api/change-requests/approved/');
         if (approvedResponse.ok) {
           const approvedData = await approvedResponse.json();
           const pageSpecificApproved = approvedData.approved_requests?.filter(req => 
@@ -27,7 +27,7 @@ const ApprovalStatusBox = ({ pageType, selectedClass, selectedGender }) => {
         }
 
         // Get recent rejected changes
-        const rejectedResponse = await fetch('http://192.168.100.2:8000/api/change-requests/rejected/');
+        const rejectedResponse = await fetch('http://192.168.18.139:8000/api/change-requests/rejected/');
         if (rejectedResponse.ok) {
           const rejectedData = await rejectedResponse.json();
           const pageSpecificRejected = rejectedData.rejected_requests?.filter(req => 

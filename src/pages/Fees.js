@@ -52,7 +52,7 @@ const Fees = () => {
     try {
       const classId = selected.classIdx + 1;
       
-      const response = await fetch(`http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
+      const response = await fetch(`http://192.168.18.139:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`);
       if (!response.ok) throw new Error('Failed to fetch students');
       const data = await response.json();
       console.log('Students fetched:', data.length);
@@ -61,7 +61,7 @@ const Fees = () => {
       // Fetch absentees count for each student for the selected month
       const absenteesCount = await getAbsenteesByClassAndMonth(classId, year, month);
       // Fetch fees for the selected month
-      const feeRes = await fetch(`http://192.168.100.2:8000/api/fees/?month=${selectedMonth}&student__class_admitted=Class ${classId}&student__gender=${selected.gender}`);
+      const feeRes = await fetch(`http://192.168.18.139:8000/api/fees/?month=${selectedMonth}&student__class_admitted=Class ${classId}&student__gender=${selected.gender}`);
       const feeData = feeRes.ok ? await feeRes.json() : [];
       console.log('Fees fetched:', feeData.length);
       // Map students with their fee data and absentees

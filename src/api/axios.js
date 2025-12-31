@@ -2,7 +2,7 @@ import axios from "axios";
 
 // =================== BASE URL HANDLER ===================
 const getBaseURL = () => {
-  return `http://192.168.100.2:8000/api`;
+  return `http://192.168.18.139:8000/api`;
 };
 
 

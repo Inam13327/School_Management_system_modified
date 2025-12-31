@@ -49,7 +49,7 @@ const Reports = () => {
     let fetchedSubjectTotals = {};
     if (selected.classIdx !== null) {
       const classId = selected.classIdx + 1;
-      const res = await fetch(`http://192.168.100.2:8000/api/subjects/?class_fk=${classId}`);
+      const res = await fetch(`http://192.168.18.139:8000/api/subjects/?class_fk=${classId}`);
       if (res.ok) {
         const data = await res.json();
         fetchedSubjects = data.map(s => s.name);
@@ -64,7 +64,7 @@ const Reports = () => {
       let allMarks = [];
       if (selected.classIdx !== null) {
         const classId = selected.classIdx + 1;
-        const res = await fetch(`http://192.168.100.2:8000/api/marks/?class_fk=${classId}&student=${student.id}`);
+        const res = await fetch(`http://192.168.18.139:8000/api/marks/?class_fk=${classId}&student=${student.id}`);
         if (res.ok) {
           const data = await res.json();
           const marks = Array.isArray(data) ? data : data.value || [];
@@ -82,7 +82,7 @@ const Reports = () => {
       const classId = selected.classIdx !== null ? selected.classIdx + 1 : null;
       let attData = [];
       if (classId) {
-        const attRes = await fetch(`http://192.168.100.2:8000/api/attendances/?student__class_admitted=Class ${classId}`);
+        const attRes = await fetch(`http://192.168.18.139:8000/api/attendances/?student__class_admitted=Class ${classId}`);
         if (!attRes.ok) throw new Error('Failed to fetch attendance');
         const attDataRaw = await attRes.json();
         attData = Array.isArray(attDataRaw) ? attDataRaw : attDataRaw.value || [];
@@ -152,7 +152,7 @@ const Reports = () => {
       try {
         const classId = selected.classIdx + 1;
         const response = await fetch(
-          `http://192.168.100.2:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`
+          `http://192.168.18.139:8000/api/students/?class_admitted=Class ${classId}&gender=${selected.gender}`
         );
         if (!response.ok) throw new Error('Failed to fetch students');
         const data = await response.json();
